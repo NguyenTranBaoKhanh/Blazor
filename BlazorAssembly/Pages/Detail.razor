@@ -1,0 +1,51 @@
+﻿@page "/detail/{Id}"
+@using BlazorAssembly.Services
+@using Share
+
+@inject ICategoryApi CategoryApi;
+
+<PageTitle>Detail</PageTitle>
+
+@if (CategoryDetail == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>DisplayOrder</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+           
+                <tr>
+                    <td>@CategoryDetail.Id</td>
+                    <td>@CategoryDetail.Name</td>
+                    <td>@CategoryDetail.DisplayOrder</td>
+                    <td>@CategoryDetail.Priority</td>
+                </tr>
+            
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private CategoryDto CategoryDetail  { get; set; }
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+
+        CategoryDetail = await CategoryApi.GetById(int.Parse(Id));
+    }
+}

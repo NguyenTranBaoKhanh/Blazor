@@ -1,0 +1,60 @@
+﻿@page "/create"
+
+@using Share
+@using Share.Enums
+@using BlazorAssembly.Services
+
+
+@inject ICategoryApi CategoryApi;
+@inject NavigationManager NavigationManager;
+
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<EditForm Model="category" OnValidSubmit="CreateCategory">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    @* <ValidationSummary></ValidationSummary> *@
+    <div class="form-group">
+        <label for="Name">Name</label>
+        <InputText class="form-control" @bind-Value="category.Name"></InputText>
+        <ValidationMessage For="() => category.Name"></ValidationMessage>
+        <small id="nameHelp" class="form-text text-muted">Please enter category name here.</small>
+    </div>
+    <div class="form-group mt-2">
+        <label for="Priority">Priority</label>
+        <InputSelect class="form-control" @bind-Value="category.Priority">
+        <option>Select priority</option>
+            @foreach (var item in Enum.GetNames(typeof(Priority)))
+            {
+                <option value="@item">@item</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="() => category.Priority"></ValidationMessage>
+
+    </div>
+    <div class="form-group mt-3">
+        <label for="DisplayOrder">DisplayOrder</label>
+        <InputNumber class="form-control" @bind-Value="category.DisplayOrder"></InputNumber>
+        <ValidationMessage For="() => category.DisplayOrder"></ValidationMessage>
+
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+</EditForm>
+
+
+
+@code {
+    private CategoryCreate category = new CategoryCreate();
+
+    private async Task CreateCategory(EditContext context)
+    {
+        var result = await CategoryApi.Create(category);
+        if(result){
+            NavigationManager.NavigateTo("/category");
+        }else{
+
+        }
+    }
+}
